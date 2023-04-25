@@ -21,5 +21,32 @@
         
     </form>
 
+    <script type="text/javascript">
+
+        var socket = io('http://localhost:8080');
+
+        $('#chat').submit((event) => {
+
+            event.preventDefault();
+
+            var author = $('input[name=username]').val();
+            var message = $('input[name=message]').val();
+
+            if(author.length && message.length) {
+
+                var messageObject = {
+
+                    author,
+                    message
+
+                };
+
+                socket.emit('sendMessage', messageObject);
+
+            }
+
+        })
+    </script>
+
 </body>
 </html>

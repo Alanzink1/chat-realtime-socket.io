@@ -14,4 +14,17 @@ app.use('/', (req, res) => {
     res.render('index.html');
 });
 
+let messages = [];
+
+io.on('connection', socket => {
+
+    console.log(`Socket conectado: ${socket.id}`);
+    socket.on('sendMessage', data => {
+
+        console.log(data);
+
+    })
+
+})
+
 server.listen(8080, () => console.log("Server is Running"));
