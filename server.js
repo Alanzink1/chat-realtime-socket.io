@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const app = express();
 const server = require('http').createServer(app);
@@ -19,9 +20,16 @@ let messages = [];
 io.on('connection', socket => {
 
     console.log(`Socket conectado: ${socket.id}`);
+
+    socket.emit('previousMessages', messages)
+
     socket.on('sendMessage', data => {
 
         console.log(data);
+
+        messages.push(data);
+        socket.broadcast.emit('receivedMessage', data);
+        
 
     })
 
