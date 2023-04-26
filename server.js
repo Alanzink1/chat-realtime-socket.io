@@ -18,6 +18,7 @@ app.set('view engine', 'html');
 app.use('/', (req, res) => {
     res.render('index.html');
 });
+
 let messages = [];
 messagesChat();
 
@@ -36,6 +37,13 @@ io.on('connection', socket => {
 
     })
 
+    socket.on('removeMessage', removeMsg => {
+
+        remove();
+        socket.emit('removeMessageChat', messages);
+
+    });
+
 })
 
 server.listen(8080, () => console.log("Server is Running"));
@@ -47,8 +55,6 @@ async function messagesChat() {
 
     for(let i = 0; i <= Object.values(chatMessages).length -1; i++) {
 
-        console.log(i);
-
         let author = Object.values(chatMessages)[i].author;
         let message = Object.values(chatMessages)[i].message;
 
@@ -56,10 +62,20 @@ async function messagesChat() {
 
     }
 
-    console.log(chatMessagesResult)
-
     messages = chatMessagesResult;
     
     return chatMessagesResult;
+
+}
+
+async function remove(){
+
+    try {
+        await ChatModel.deleteMany();
+        messages = []
+        console.log('All Data successfully deleted');
+    } catch (err) {
+        console.log(err);
+    }
 
 }

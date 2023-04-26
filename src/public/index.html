@@ -18,18 +18,34 @@
         <div class="messages"></div>
         <input type="text" name="message" placeholder="Digite sua Mensagem">
         <button type="submit">Enviar</button>
+        <button id="clear" style="background-color: gray;">Clear All Messages</button>
         
     </form>
 
     <script type="text/javascript">
 
+        
         var socket = io('http://localhost:8080');
+        
+        $('#clear').click((event) => {
+            
+            socket.emit('removeMessage', 'removeMsg');
+
+        })
 
         function renderMessage(message) {
-
+            
             $('.messages').append('<div class="message"><strong>'+ message.author + '</strong>: ' + message.message + '</div>');
 
         }
+
+        socket.on('removeMessageChat', (message) => {
+
+            document.querySelectorAll('.message').forEach(element => {
+                element.remove()
+            });            
+
+        });
 
         socket.on('previousMessages', (messages) => {
 
@@ -68,6 +84,7 @@
             }
 
         })
+
     </script>
 
 </body>
